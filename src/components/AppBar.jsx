@@ -1,30 +1,36 @@
 import { View, StyleSheet, Pressable } from 'react-native';
-import Text from './Text'
-import Constants from 'expo-constants';
+import { Link } from "react-router-native";
+
+import Text from './Text';
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight,
+        paddingTop: 40,
         paddingBottom: 15,
-        paddingLeft: 10,
+        paddingHorizontal: 10,
         backgroundColor: 'black',
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         opacity: 0.85
     },
 });
 
-const onPressFunction = () => {
-    // logic here
-};
-
 const AppBar = () => {
     return (
         <View style={styles.container}>
-            <Pressable onPress={onPressFunction}>
-                <Text fontSize="subheading" fontWeight="bold" color="header">
-                    Repositories
-                </Text>
+            <Pressable>
+                <Link to="/">
+                    <Text fontSize="subheading" fontWeight="bold" color="header">
+                        Repositories
+                    </Text>
+                </Link>
+            </Pressable>
+            <Pressable>
+                <Link to="/login">
+                    <Text fontSize="subheading" fontWeight="bold" color="header">
+                        Sign in
+                    </Text>
+                </Link>
             </Pressable>
         </View>
     );

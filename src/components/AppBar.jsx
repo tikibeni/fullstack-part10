@@ -22,11 +22,7 @@ const AppBar = () => {
     return (
         <View style={styles.container}>
             <Pressable onPress={onPressFunction}>
-                <Text
-                    fontSize="subheading"
-                    color="header"
-                    fontWeight="bold"
-                >
+                <Text fontSize="subheading" fontWeight="bold" color="header">
                     Repositories
                 </Text>
             </Pressable>

@@ -25,11 +25,6 @@ const theme = {
             borderRadius: 4
         }
     },
-    lists: {
-        repositoryBasic: {
-
-        }
-    }
 };
 
 export default theme;

@@ -1,20 +1,17 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
+import Text from './Text'
 import Constants from 'expo-constants';
 
 const styles = StyleSheet.create({
     container: {
         paddingTop: Constants.statusBarHeight,
-        paddingBottom: 10,
+        paddingBottom: 15,
         paddingLeft: 10,
         backgroundColor: 'black',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        opacity: 0.7
+        opacity: 0.85
     },
-    label: {
-        fontSize: 24,
-        color: 'white'
-    }
 });
 
 const onPressFunction = () => {
@@ -25,7 +22,13 @@ const AppBar = () => {
     return (
         <View style={styles.container}>
             <Pressable onPress={onPressFunction}>
-                <Text style={styles.label}>Repositories</Text>
+                <Text
+                    fontSize="subheading"
+                    color="header"
+                    fontWeight="bold"
+                >
+                    Repositories
+                </Text>
             </Pressable>
         </View>
     );

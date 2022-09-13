@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 
 import SignInForm from './SignInForm';
-import useSignIn from "../hooks/useSignIn";
+import useAuth from "../hooks/useAuth";
 
 const validationSchema = yup.object().shape({
     username: yup
@@ -15,15 +15,14 @@ const validationSchema = yup.object().shape({
 })
 
 const SignIn = () => {
-    const [signIn] = useSignIn();
+    const { signIn } = useAuth();
     const navigate = useNavigate()
 
     const onSubmit = async (values) => {
         const { username, password } = values;
 
         try {
-            const { data } = await signIn({ username, password });
-            console.log(data);
+            await signIn({ username, password });
             navigate('/', { replace: true })
         } catch (e) {
             console.log(e);

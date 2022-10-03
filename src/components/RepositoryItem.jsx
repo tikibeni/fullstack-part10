@@ -1,13 +1,26 @@
-import { View } from 'react-native';
-import RepositoryItemStats from './RepositoryItemStats';
-import RepositoryItemProfile from "./RepositoryItemProfile";
+import { useState } from 'react';
+import { Pressable, View } from 'react-native';
 
-const RepositoryItem = ({ item }) => {
+import RepositoryItemProfile from "./RepositoryItemProfile";
+import RepositoryItemStats from './RepositoryItemStats';
+
+const RepositoryItem = ({ item, navigate }) => {
+    const [viewingSingle, setViewingSingle] = useState(false)
+
+    const openSingleRepository = () => {
+        if (!viewingSingle && navigate !== undefined) {
+            setViewingSingle(true)
+            navigate(`/${item.id}`, { replace: true })
+        }
+    }
+
     return (
-        <View style={{ backgroundColor: 'white' }} testID="repositoryItem" >
-            <RepositoryItemProfile item={item} />
-            <RepositoryItemStats item={item} />
-        </View>
+        <Pressable onPress={openSingleRepository}>
+            <View style={{ backgroundColor: 'white' }} testID="repositoryItem" >
+                <RepositoryItemProfile item={item} />
+                <RepositoryItemStats item={item} />
+            </View>
+        </Pressable>
     )
 }
 

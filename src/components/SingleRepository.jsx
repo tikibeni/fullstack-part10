@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { useParams } from 'react-router-native'
-import { GET_REPOSITORY } from '../graphql/queries'
+import { useState } from "react";
+import { FlatList } from "react-native";
+import { useQuery } from "@apollo/client";
+import { useParams } from "react-router-native";
 
-import RepositoryItem from './RepositoryItem'
-import Text from './Text'
-import Githubbutton from "./Githubbutton";
+import { GET_REPOSITORY } from "../graphql/queries";
+import RepositoryInfo from "./RepositoryInfo";
+import ItemSeparator from "./ItemSeparator";
+import ReviewItem from "./ReviewItem";
+import Text from "./Text";
 
 const SingleRepository = () => {
     const [repo, setRepo] = useState(null)
@@ -17,7 +19,7 @@ const SingleRepository = () => {
             if (data && data.repository !== null) {
                 setRepo(data.repository);
             }
-        },
+        }
     });
 
     if (loading) {
@@ -25,10 +27,13 @@ const SingleRepository = () => {
     }
 
     return repo ? (
-        <>
-            <RepositoryItem item={repo} />
-            <Githubbutton item={repo} />
-        </>
+        <FlatList
+            data={repo.reviews.edges}
+            renderItem={({ item }) => <ReviewItem review={item} />}
+            keyExtractor={item => item.node.id}
+            ListHeaderComponent={<RepositoryInfo repo={repo} />}
+            ItemSeparatorComponent={ItemSeparator}
+        />
     ) : null
 }
 

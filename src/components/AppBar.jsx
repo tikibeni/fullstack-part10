@@ -61,13 +61,22 @@ const AppBar = () => {
             )
         }
         return (
-            <Pressable>
-                <Link to="/login">
-                    <Text fontSize="subheading" fontWeight="bold" color="header">
-                        Sign in
-                    </Text>
-                </Link>
-            </Pressable>
+            <>
+                <Pressable>
+                    <Link to="/login">
+                        <Text fontSize="subheading" fontWeight="bold" color="header">
+                            Sign in
+                        </Text>
+                    </Link>
+                </Pressable>
+                <Pressable>
+                    <Link to="/register">
+                        <Text fontSize="subheading" fontWeight="bold" color="header">
+                            Sign up
+                        </Text>
+                    </Link>
+                </Pressable>
+            </>
         )
     }
 

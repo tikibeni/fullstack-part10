@@ -39,14 +39,25 @@ const AppBar = () => {
         navigate("/")
     }
 
+    const review = () => {
+        navigate("/review")
+    }
+
     const userTab = () => {
         if (user !== null) {
             return (
-                <Pressable onPress={logout}>
-                    <Text fontSize="subheading" fontWeight="bold" color="header">
-                        Sign out
-                    </Text>
-                </Pressable>
+                <>
+                    <Pressable onPress={review}>
+                        <Text fontSize="subheading" fontWeight="bold" color="header">
+                            Create a review
+                        </Text>
+                    </Pressable>
+                    <Pressable onPress={logout}>
+                        <Text fontSize="subheading" fontWeight="bold" color="header">
+                            Sign out
+                        </Text>
+                    </Pressable>
+                </>
             )
         }
         return (

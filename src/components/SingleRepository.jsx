@@ -15,6 +15,7 @@ const SingleRepository = () => {
 
     const { loading } = useQuery(GET_REPOSITORY, {
         variables: { repositoryId: param.id },
+        fetchPolicy: 'cache-and-network',
         onCompleted: (data) => {
             if (data && data.repository !== null) {
                 setRepo(data.repository);

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FlatList } from "react-native";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-native";
@@ -10,30 +9,46 @@ import ReviewItem from "./ReviewItem";
 import Text from "./Text";
 
 const SingleRepository = () => {
-    const [repo, setRepo] = useState(null)
     let param = useParams()
 
-    const { loading } = useQuery(GET_REPOSITORY, {
-        variables: { repositoryId: param.id },
+    const onEndReach = () => handleFetchMore()
+
+    const variables = {
+        repositoryId: param.id,
+        first: 5
+    }
+
+    const { data, loading, fetchMore  } = useQuery(GET_REPOSITORY, {
+        variables,
         fetchPolicy: 'cache-and-network',
-        onCompleted: (data) => {
-            if (data && data.repository !== null) {
-                setRepo(data.repository);
-            }
-        }
     });
+
+    const handleFetchMore = () => {
+        const canFetchMore = !loading && data?.repository.reviews.pageInfo.hasNextPage
+
+        if (!canFetchMore) return
+
+        fetchMore({
+            variables: {
+                after: data.repository.reviews.pageInfo.endCursor,
+                ...variables
+            }
+        })
+    }
 
     if (loading) {
         return <Text>Loading...</Text>
     }
 
-    return repo ? (
+    return data?.repository ? (
         <FlatList
-            data={repo.reviews.edges}
+            data={data.repository.reviews.edges}
+            ItemSeparatorComponent={ItemSeparator}
+            ListHeaderComponent={<RepositoryInfo repo={data.repository} />}
             renderItem={({ item }) => <ReviewItem review={item} />}
             keyExtractor={item => item.node.id}
-            ListHeaderComponent={<RepositoryInfo repo={repo} />}
-            ItemSeparatorComponent={ItemSeparator}
+            onEndReached={onEndReach}
+            onEndReachedThreshold={0.5}
         />
     ) : null
 }

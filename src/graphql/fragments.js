@@ -1,32 +1,60 @@
 import { gql } from "@apollo/client";
 
-export const repository = gql`
-    fragment repository on Repository {
+export const user = gql`
+    fragment user on User {
         id
-        ownerName
-        url
-        name
-        ownerAvatarUrl
-        fullName
-        description
-        language
-        stargazersCount
-        forksCount
-        reviewCount
-        ratingAverage
-        reviews {
-            edges {
-                node {
-                    id
-                    text
-                    rating
-                    createdAt
-                    user {
-                        id
-                        username
-                    }
-                }
+        username
+    }
+`
+
+export const review = gql`
+    fragment review on Review {
+        id
+        text
+        rating
+        createdAt
+        user {
+            ...user
+        }
+    }
+    ${user}
+`
+
+export const reviewconnection = gql`
+    fragment reviewconnection on ReviewConnection {
+        totalCount
+        pageInfo {
+            hasNextPage
+            startCursor
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                ...review
             }
         }
     }
+    ${review}
+`
+
+export const repository = gql`
+    fragment repository on Repository {
+        id
+        url
+        name
+        language
+        fullName
+        ownerName
+        forksCount
+        description
+        reviewCount
+        ratingAverage
+        ownerAvatarUrl
+        stargazersCount
+        reviews(first: $first, after: $after) {
+            ...reviewconnection
+        }
+    }
+    ${reviewconnection}
 `;

@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { GET_REPOSITORIES } from '../graphql/queries'
 
-const useRepositories = ({ sortBy, searchValue }) => {
-    const [repositories, setRepositories] = useState()
+const useRepositories = ({ first, sortBy, searchValue }) => {
     const [orderer, setOrderer] = useState("CREATED_AT")
     const [orderDirection, setOrderDirection] = useState("DESC")
 
@@ -27,20 +26,38 @@ const useRepositories = ({ sortBy, searchValue }) => {
             console.log('Error initializing useRepositories order function.')
     }
 
-    useQuery(GET_REPOSITORIES, {
-        variables: {
-            orderBy: orderer,
-            orderDirection: orderDirection,
-            searchKeyword: searchValue
-        },
+    const variables = {
+        first,
+        orderBy: orderer,
+        orderDirection,
+        searchKeyword: searchValue
+    }
+
+    const { data, loading, fetchMore, ...result } = useQuery(GET_REPOSITORIES, {
+        variables,
         fetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
-        onCompleted: (data) => {
-            setRepositories(data.repositories)
-        }
     })
 
-    return { repositories }
+    const handleFetchMore = () => {
+        const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage
+
+        if (!canFetchMore) return
+
+        fetchMore({
+            variables: {
+                after: data.repositories.pageInfo.endCursor,
+                ...variables
+            }
+        })
+    }
+
+    return {
+        repositories: data?.repositories,
+        fetchMore: handleFetchMore,
+        loading,
+        ...result
+    }
 }
 
 export default useRepositories

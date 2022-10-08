@@ -15,7 +15,9 @@ const RepositoryList = () => {
     const [searchValue] = useDebounce(searchQuery, 500)
     const navigate = useNavigate()
 
-    const { repositories } = useRepositories({ sortBy, searchValue });
+    const { repositories, fetchMore } = useRepositories({ first: 8, sortBy, searchValue });
+
+    const onEndReach = () => fetchMore()
 
     return (
         <RepositoryListContainer
@@ -25,6 +27,7 @@ const RepositoryList = () => {
             setSortBy={setSortBy}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            onEndReach={onEndReach}
         />
     )
 }
@@ -42,7 +45,7 @@ export class RepositoryListContainer extends React.Component {
     }
 
     render() {
-        const { repositories, navigate } = this.props
+        const { repositories, navigate, onEndReach } = this.props
         const repositoryNodes = repositories
             ? repositories.edges.map(edge => edge.node)
             : [];
@@ -56,6 +59,8 @@ export class RepositoryListContainer extends React.Component {
                     return <RepositoryItem item={item} navigate={navigate} />
                 }}
                 keyExtractor={(item => item.id)}
+                onEndReached={onEndReach}
+                onEndReachedThreshold={0.5}
             />
         )
     }

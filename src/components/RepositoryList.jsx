@@ -1,16 +1,19 @@
+import { useState } from "react";
 import { FlatList } from 'react-native';
 import { useNavigate } from "react-router-native";
 import useRepositories from "../hooks/useRepositories";
 import RepositoryItem from './RepositoryItem';
 import ItemSeparator from "./ItemSeparator";
+import ListSorter from "./ListSorter";
 
 const RepositoryList = () => {
-    const { repositories } = useRepositories();
+    const [sortBy, setSortBy] = useState("CREATED_AT")
+    const { repositories } = useRepositories(sortBy);
 
-    return <RepositoryListContainer repositories={repositories} />
+    return <RepositoryListContainer repositories={repositories} sortBy={sortBy} setSortBy={setSortBy} />
 }
 
-export const RepositoryListContainer = ({ repositories }) => {
+export const RepositoryListContainer = ({ repositories, sortBy, setSortBy }) => {
     const navigate = useNavigate()
 
     const repositoryNodes = repositories
@@ -21,6 +24,7 @@ export const RepositoryListContainer = ({ repositories }) => {
         <FlatList
             data={repositoryNodes}
             ItemSeparatorComponent={ItemSeparator}
+            ListHeaderComponent={<ListSorter sortValue={sortBy} setSortValue={setSortBy} />}
             renderItem={({ item }) => {
                 return <RepositoryItem item={item} navigate={navigate} />
             }}
